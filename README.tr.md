@@ -5,6 +5,8 @@ Parçanın gerçek boyutunu bir bakışta görün: model, ölçüleri ve tahmini
 
 [English](README.md)
 
+![SquarePeek önizleme bölmesi: ölçüm ızgarasında ölçüleri ve baskı gramıyla bir braket](docs/screenshot.png)
+
 ## Özellikler
 
 - Gezgin'in önizleme bölmesinde (`Alt+P`) **döndürülebilir 3B önizleme** (Direct3D 11). Z yukarı, model tablaya oturur.
