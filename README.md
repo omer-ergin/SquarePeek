@@ -6,7 +6,7 @@ approximate print weight. Works alongside Creality Print, OrcaSlicer, Bambu Stud
 
 [Türkçe](README.tr.md)
 
-![SquarePeek preview pane: a bracket on the measuring grid with dimensions and print weight](docs/screenshot.png)
+![SquarePeek preview pane: a bracket on the measuring grid with dimensions and print weight](docs/preview.gif)
 
 ## Features
 

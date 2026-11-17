@@ -5,7 +5,7 @@ Parçanın gerçek boyutunu bir bakışta görün: model, ölçüleri ve tahmini
 
 [English](README.md)
 
-![SquarePeek önizleme bölmesi: ölçüm ızgarasında ölçüleri ve baskı gramıyla bir braket](docs/screenshot.png)
+![SquarePeek önizleme bölmesi: ölçüm ızgarasında ölçüleri ve baskı gramıyla bir braket](docs/preview.gif)
 
 ## Özellikler
 
