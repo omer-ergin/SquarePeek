@@ -1,17 +1,9 @@
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
-#include <string>
-#include <vector>
+// Keeps old includes working: Mesh and LoadModel now live in model.h.
+#include "model.h"
 
-struct Mesh {
-    std::vector<float> vertices;
-    uint32_t triangleCount = 0;
-
-    float bounds[6]{};
-
-    float radius = 1.0f;
-};
-
-bool LoadStl(const void* data, size_t size, uint32_t maxTriangles, Mesh& out, std::wstring& error);
+// Decodes STL only (binary or ASCII). The result follows the SAME contract as LoadModel
+// (scene space, statistics, Turkish error). flags: ModelLoadFlags.
+bool LoadStl(const void* data, size_t size, uint32_t maxTriangles, Mesh& out, std::wstring& error,
+             uint32_t flags = kModelLoadDefault);

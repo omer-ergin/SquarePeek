@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <title>STL Preview - alternative 6</title>
+  <rect x="8" y="8" width="240" height="240" rx="36" fill="#FFC414"/>
+  <path d="M 36 214 L 36 42 Q 36 36 42 36 L 70 36 Q 76 36 76 42 L 76 180 L 214 180 Q 220 180 220 186 L 220 214 Q 220 220 214 220 L 42 220 Q 36 220 36 214 Z" fill="#1B1B1B"/>
+  <polyline points="56,172 76,172" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="65,164 76,164" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="65,156 76,156" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="65,148 76,148" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="65,140 76,140" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="56,132 76,132" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="65,124 76,124" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="65,116 76,116" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="65,108 76,108" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="65,100 76,100" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="56,92 76,92" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="65,84 76,84" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="65,76 76,76" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="65,68 76,68" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="65,60 76,60" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="56,52 76,52" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="84,180 84,200" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="92,180 92,191" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="100,180 100,191" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="108,180 108,191" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="116,180 116,191" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="124,180 124,200" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="132,180 132,191" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="140,180 140,191" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="148,180 148,191" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="156,180 156,191" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="164,180 164,200" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="172,180 172,191" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="180,180 180,191" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="188,180 188,191" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="196,180 196,191" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="204,180 204,200" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polyline points="212,180 212,191" fill="none" stroke="#FFC414" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round"/>
+  <polygon points="140,50 191.96,80 191.96,140 140,170 88.04,140 88.04,80" fill="#1B1B1B"/>
+  <polygon points="88.04,80 140,110 140,170 88.04,140" fill="#4A4A4A"/>
+  <polygon points="140,110 191.96,80 191.96,140 140,170" fill="#1B1B1B"/>
+  <polygon points="140,50 191.96,80 140,110 88.04,80" fill="#FFFFFF"/>
+</svg>

@@ -3,15 +3,12 @@
 #include "registration.h"
 #include "thumbnail_provider.h"
 
-#include <atomic>
 #include <new>
 #include <string>
 
 HMODULE g_moduleHandle = nullptr;
 
 namespace {
-std::atomic<LONG> g_serverLocks{0};
-
 template <typename T>
 class ClassFactory final : public IClassFactory {
 public:
@@ -43,22 +40,10 @@ public:
         return hr;
     }
 
-    IFACEMETHODIMP LockServer(BOOL lock) override {
-        if (lock) {
-            ++g_serverLocks;
-        } else {
-            --g_serverLocks;
-        }
-        return S_OK;
-    }
+    // No lock count: the DLL is never unloaded (DllCanUnloadNow).
+    IFACEMETHODIMP LockServer(BOOL) override { return S_OK; }
 };
 
-std::wstring GetModulePath() {
-    wchar_t path[MAX_PATH * 2] = {};
-    const DWORD length = GetModuleFileNameW(g_moduleHandle, path, ARRAYSIZE(path));
-    if (length == 0) return std::wstring();
-    return std::wstring(path, length);
-}
 }
 
 BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID) {
@@ -89,16 +74,14 @@ STDAPI DllGetClassObject(REFCLSID clsid, REFIID riid, void** ppv) {
     return factory->QueryInterface(riid, ppv);
 }
 
+// Load / launch threads run detached and depend on DLL code, so the DLL is never unloaded.
 STDAPI DllCanUnloadNow() {
     return S_FALSE;
 }
 
-STDAPI DllRegisterServer() {
-    std::wstring log;
-    const bool ok = RegisterShellExtension(GetModulePath(), log);
-    OutputDebugStringW(log.c_str());
-    return ok ? S_OK : E_FAIL;
-}
+// regsvr32 is not supported: an HKCU registration shadows the machine-wide one and drops the preview to low
+// integrity. Install with: stlprev-setup register-machine (administrator).
+STDAPI DllRegisterServer() { return E_NOTIMPL; }
 
 STDAPI DllUnregisterServer() {
     std::wstring log;

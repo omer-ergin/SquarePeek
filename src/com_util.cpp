@@ -13,14 +13,14 @@ constexpr size_t kReadChunk = 256 * 1024;
 bool ReadStreamAll(IStream* stream, std::vector<uint8_t>& out, std::wstring& error) {
     out.clear();
     if (!stream) {
-        error = L"Нет потока данных";
+        error = L"Veri akışı yok";
         return false;
     }
 
     STATSTG stat{};
     if (SUCCEEDED(stream->Stat(&stat, STATFLAG_NONAME)) && stat.cbSize.QuadPart > 0) {
         if (stat.cbSize.QuadPart > kMaxFileSize) {
-            error = L"Файл слишком большой";
+            error = L"Dosya çok büyük (sınır 512 MB)";
             return false;
         }
         out.reserve(static_cast<size_t>(stat.cbSize.QuadPart));
@@ -35,18 +35,18 @@ bool ReadStreamAll(IStream* stream, std::vector<uint8_t>& out, std::wstring& err
         out.resize(offset + bytesRead);
 
         if (FAILED(hr)) {
-            error = L"Ошибка чтения потока";
+            error = L"Akış okuma hatası";
             return false;
         }
         if (bytesRead == 0 || hr == S_FALSE) break;
         if (out.size() > kMaxFileSize) {
-            error = L"Файл слишком большой";
+            error = L"Dosya çok büyük (sınır 512 MB)";
             return false;
         }
     }
 
     if (out.empty()) {
-        error = L"Файл пуст";
+        error = L"Dosya boş";
         return false;
     }
     return true;
@@ -55,26 +55,26 @@ bool ReadStreamAll(IStream* stream, std::vector<uint8_t>& out, std::wstring& err
 bool ReadFileAll(const wchar_t* path, std::vector<uint8_t>& out, std::wstring& error) {
     out.clear();
     if (!path || !*path) {
-        error = L"Путь к файлу не задан";
+        error = L"Dosya yolu belirtilmedi";
         return false;
     }
 
     const HANDLE file = CreateFileW(path, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
                                     nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (file == INVALID_HANDLE_VALUE) {
-        error = L"Не удалось открыть файл";
+        error = L"Dosya açılamadı";
         return false;
     }
 
     LARGE_INTEGER size{};
     if (!GetFileSizeEx(file, &size) || size.QuadPart <= 0) {
         CloseHandle(file);
-        error = L"Пустой файл";
+        error = L"Dosya boş";
         return false;
     }
     if (static_cast<unsigned long long>(size.QuadPart) > kMaxFileSize) {
         CloseHandle(file);
-        error = L"Файл слишком большой";
+        error = L"Dosya çok büyük (sınır 512 MB)";
         return false;
     }
 
@@ -86,7 +86,7 @@ bool ReadFileAll(const wchar_t* path, std::vector<uint8_t>& out, std::wstring& e
         if (!ReadFile(file, out.data() + offset, request, &bytesRead, nullptr) || bytesRead == 0) {
             CloseHandle(file);
             out.clear();
-            error = L"Ошибка чтения файла";
+            error = L"Dosya okuma hatası";
             return false;
         }
         offset += bytesRead;
@@ -126,7 +126,7 @@ bool CreateD3D11Device(ID3D11Device** device, ID3D11DeviceContext** context) {
         if (FAILED(hr)) {
             wchar_t message[256] = {};
             _snwprintf_s(message, ARRAYSIZE(message), _TRUNCATE,
-                         L"D3D11CreateDevice: аппаратный 0x%08lX, WARP 0x%08lX",
+                         L"D3D11CreateDevice: hardware 0x%08lX, WARP 0x%08lX",
                          static_cast<unsigned long>(hardwareResult), static_cast<unsigned long>(hr));
             DebugLog(message);
         }
@@ -190,9 +190,26 @@ void DownsampleBgraHalf(const std::vector<uint8_t>& source, UINT sourceWidth, UI
 }
 
 namespace {
+bool ProcessIsLowIntegrity() {
+    HANDLE token = nullptr;
+    if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &token)) return false;
+    BYTE buffer[64] = {};
+    DWORD size = 0;
+    bool low = false;
+    if (GetTokenInformation(token, TokenIntegrityLevel, buffer, sizeof(buffer), &size)) {
+        const auto* label = reinterpret_cast<const TOKEN_MANDATORY_LABEL*>(buffer);
+        const DWORD count = *GetSidSubAuthorityCount(label->Label.Sid);
+        low = *GetSidSubAuthority(label->Label.Sid, count - 1) < SECURITY_MANDATORY_MEDIUM_RID;
+    }
+    CloseHandle(token);
+    return low;
+}
+
 std::wstring ChooseLogPath() {
     PWSTR localAppData = nullptr;
-    if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_LocalAppData, 0, nullptr, &localAppData))) {
+    // Explorer starts the preview host at low integrity level, which can only write to LocalLow.
+    const KNOWNFOLDERID& folder = ProcessIsLowIntegrity() ? FOLDERID_LocalAppDataLow : FOLDERID_LocalAppData;
+    if (SUCCEEDED(SHGetKnownFolderPath(folder, 0, nullptr, &localAppData))) {
         std::wstring directory = std::wstring(localAppData) + L"\\STLPreview";
         CoTaskMemFree(localAppData);
         CreateDirectoryW(directory.c_str(), nullptr);
@@ -223,17 +240,31 @@ void DebugLog(const wchar_t* message) {
     static const std::wstring logPath = ChooseLogPath();
     if (logPath.empty()) return;
 
-    const HANDLE file = CreateFileW(logPath.c_str(), FILE_APPEND_DATA, FILE_SHARE_READ | FILE_SHARE_WRITE,
-                                    nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+    // A log over 1 MB is moved to .old (single backup; a cross-process race is harmless: at worst a line is lost).
+    WIN32_FILE_ATTRIBUTE_DATA info{};
+    if (GetFileAttributesExW(logPath.c_str(), GetFileExInfoStandard, &info) &&
+        (info.nFileSizeHigh != 0 || info.nFileSizeLow >= 1024u * 1024u)) {
+        MoveFileExW(logPath.c_str(), (logPath + L".old").c_str(), MOVEFILE_REPLACE_EXISTING);
+    }
+
+    const HANDLE file = CreateFileW(logPath.c_str(), FILE_APPEND_DATA | FILE_READ_ATTRIBUTES,
+                                    FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_ALWAYS,
+                                    FILE_ATTRIBUTE_NORMAL, nullptr);
     if (file == INVALID_HANDLE_VALUE) return;
 
     SYSTEMTIME time{};
     GetLocalTime(&time);
+    // line[0] is reserved for the BOM: if the file is new (empty) a UTF-16 LE BOM is written too, so Notepad
+    // shows non-ASCII characters correctly.
     wchar_t line[2048] = {};
-    _snwprintf_s(line, ARRAYSIZE(line), _TRUNCATE, L"[%02u:%02u:%02u.%03u pid %lu] %s\r\n", time.wHour,
+    line[0] = 0xFEFF;
+    _snwprintf_s(line + 1, ARRAYSIZE(line) - 1, _TRUNCATE, L"[%02u:%02u:%02u.%03u pid %lu] %s\r\n", time.wHour,
                  time.wMinute, time.wSecond, time.wMilliseconds, GetCurrentProcessId(), message);
+    LARGE_INTEGER existingSize{};
+    const bool newFile = GetFileSizeEx(file, &existingSize) && existingSize.QuadPart == 0;
+    const wchar_t* text = newFile ? line : line + 1;
     DWORD written = 0;
-    WriteFile(file, line, static_cast<DWORD>(wcslen(line) * sizeof(wchar_t)), &written, nullptr);
+    WriteFile(file, text, static_cast<DWORD>(wcslen(text) * sizeof(wchar_t)), &written, nullptr);
     CloseHandle(file);
 }
 

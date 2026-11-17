@@ -1,0 +1,49 @@
+// Shared resources for STLPreview.dll, STLPreviewHost.exe and stlprev-setup.exe:
+// the app icon (assets/app.ico, made by assets/render_icons.ps1) and version info.
+// CMakeLists.txt defines STLPREV_RC_DLL / STLPREV_RC_HOST / STLPREV_RC_SETUP per target.
+#include <winver.h>
+
+1 ICON "../assets/app.ico"
+
+#if defined(STLPREV_RC_DLL)
+#define STLPREV_FILE_DESC "STL Preview shell extension (thumbnails and preview pane)"
+#define STLPREV_FILE_NAME "STLPreview.dll"
+#define STLPREV_FILE_TYPE VFT_DLL
+#elif defined(STLPREV_RC_HOST)
+#define STLPREV_FILE_DESC "STL Preview host"
+#define STLPREV_FILE_NAME "STLPreviewHost.exe"
+#define STLPREV_FILE_TYPE VFT_APP
+#else
+#define STLPREV_FILE_DESC "STL Preview setup and registration"
+#define STLPREV_FILE_NAME "stlprev-setup.exe"
+#define STLPREV_FILE_TYPE VFT_APP
+#endif
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION 1,1,0,0
+PRODUCTVERSION 1,1,0,0
+FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+FILEFLAGS 0
+FILEOS VOS_NT_WINDOWS32
+FILETYPE STLPREV_FILE_TYPE
+FILESUBTYPE VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "CompanyName", "STLPreview"
+            VALUE "FileDescription", STLPREV_FILE_DESC
+            VALUE "FileVersion", "1.1.0.0"
+            VALUE "InternalName", STLPREV_FILE_NAME
+            VALUE "LegalCopyright", "MIT"
+            VALUE "OriginalFilename", STLPREV_FILE_NAME
+            VALUE "ProductName", "STL Preview"
+            VALUE "ProductVersion", "1.1.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1200
+    END
+END

@@ -3,6 +3,7 @@
 #include "com_ids.h"
 
 #include <atomic>
+#include <cstdint>
 #include <mutex>
 #include <string>
 #include <vector>
@@ -27,13 +28,11 @@ public:
 private:
     ~ThumbnailProvider() = default;
 
-    bool EnsureSource(std::wstring& error);
+    // Local copies of the source and its size (bytes; 0 if unknown).
+    void SnapshotSource(Microsoft::WRL::ComPtr<IStream>& stream, std::wstring& path, uint64_t& size);
 
     std::atomic<LONG> m_refs{1};
     std::mutex m_sourceMutex;
     Microsoft::WRL::ComPtr<IStream> m_stream;
     std::wstring m_path;
-    std::vector<uint8_t> m_bytes;
-    bool m_loaded = false;
-    std::wstring m_error;
 };

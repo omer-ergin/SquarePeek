@@ -1,4 +1,4 @@
-"""Генерирует тестовые STL: куб, пирамиду (ASCII), шестерню и тор."""
+"""Generates test STL files: cube, pyramid (ASCII), gear and torus."""
 
 import math
 import os

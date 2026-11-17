@@ -2,11 +2,12 @@
 setlocal
 cd /d "%~dp0"
 
-cmake --build build --config Release
+call "%~dp0build.cmd"
 if errorlevel 1 exit /b 1
 
 set "NSIS=%SCOOP%\apps\nsis\current\makensis.exe"
 if not exist "%NSIS%" set "NSIS=%USERPROFILE%\scoop\apps\nsis\current\makensis.exe"
+if not exist "%NSIS%" set "NSIS=%ProgramFiles(x86)%\NSIS\makensis.exe"
 if not exist "%NSIS%" (
   where makensis >nul 2>nul
   if errorlevel 1 (
@@ -20,4 +21,4 @@ if not exist "dist" mkdir "dist"
 "%NSIS%" /V3 /DSOURCE_DIR="%~dp0build\bin\Release" /DOUT_DIR="%~dp0dist" "%~dp0installer\STLPreview.nsi"
 if errorlevel 1 exit /b 1
 
-echo Installer: dist\STLPreview-Setup-1.0.0.exe
+echo Installer: dist\SquarePeek-Setup-1.1.0.exe

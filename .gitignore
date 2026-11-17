@@ -6,3 +6,5 @@ testdata/
 .vs/
 __pycache__/
 *.log
+test_out/
+kayit_yedegi_*/
